@@ -147,9 +147,7 @@ try:
 
             print("\nFAILED AT ROW:", index + 1)
             print(row_error)
-
             break
-
 
     connection.commit()
 

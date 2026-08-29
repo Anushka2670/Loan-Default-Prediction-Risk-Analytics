@@ -1,4 +1,6 @@
 from fastapi import FastAPI
+from src.shap_analysis import explain_loan
+from src.score_loader import save_score
 from pydantic import BaseModel
 from src.score_loader import save_score
 import joblib
@@ -74,6 +76,20 @@ def predict(data: LoanInput):
 
     risk_tier = get_risk(probability)
 
+    explanation = explain_loan(data.model_dump(exclude={"loan_id"}))
+
+    top_factors = []
+
+    for _, row in explanation.iterrows():
+
+        top_factors.append({
+            "feature": row["feature"],
+            "shap_value": round(
+                float(row["shap_value"]),
+                4
+            )
+    })
+
     save_score(
     loan_id=data.loan_id,
     probability=round(
@@ -87,10 +103,8 @@ def predict(data: LoanInput):
 
         "prediction":int(prediction),
 
-        "default_probability":round(
-            float(probability),
-            3
-        ),
+        "default_probability":round(float(probability), 3),
 
-        "risk_tier": risk_tier
+        "risk_tier": risk_tier,
+        "top_factors": top_factors
     }

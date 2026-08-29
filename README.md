@@ -15,8 +15,9 @@ The trained LightGBM model then:
 1. Predicts whether the loan is likely to default.
 2. Calculates the probability of default.
 3. Assigns a risk tier based on the probability.
-4. Stores the prediction and risk score in Oracle.
-5. Makes the stored data available for Power BI analysis.
+4. Uses SHAP to identify the main factors influencing the prediction.
+5. Stores the prediction and risk score in Oracle.
+6. Makes the stored data available for Power BI analysis.
 
 ----------- Technologies Used -----------
 
@@ -24,6 +25,7 @@ The trained LightGBM model then:
 -> Pandas
 -> Scikit-learn
 -> LightGBM
+-> SHAP
 -> Joblib
 -> FastAPI
 -> Uvicorn
@@ -62,6 +64,23 @@ Confusion matrix:
 The trained model is saved as:
 
 "models/loan_default_model.pk1"
+
+----------- SHAP Explainability -----------
+
+I added SHAP to understand which features have the most influence on the model's predictions.
+This helps make the LightGBM model easier to understand instead of treating it as a black box.
+
+The SHAP analysis identifies important features such as:
+
+-> Loan percent income
+-> Loan interest rate
+-> Person income
+-> Loan amount
+-> Home ownership 
+-> Loan grade
+
+The API also returns the top factors influencing an individual prediction.
+The generated SHAP analysis files are stored in the `reports` folder.
 
 ----------- Risk Tiers -----------
 
@@ -159,6 +178,10 @@ Loan Default Prediction & Risk Analytics System/
 ├── models/
 │   └── loan_default_model.pkl
 |
+├── reports/
+|   ├── shap_feature_importance.png
+|   └── shap_summary.png
+|
 ├── sql/
 |   ├── create_remaining_tables.sql
 |   ├── create_tables.sql
@@ -173,6 +196,7 @@ Loan Default Prediction & Risk Analytics System/
 |   ├── eda_analysis.py
 |   ├── feature_engineering.py
 │   ├── score_loader.py
+|   ├── shap_analysis.py
 |   ├── test_connection.py
 │   └──train_model.py
 │
@@ -226,6 +250,8 @@ FastAPI
      ↓
 Prediction + Default Probability
      ↓
+SHAP Explainability
+     ↓
 Risk Tier
      ↓
 Oracle Database
@@ -238,7 +264,6 @@ Power BI Dashboard
 
 Some improvements I would like to add later are:
 
--> SHAP based model explanations
 -> Better model monitoring
 -> API authentication
 -> Automated model retraining
@@ -254,6 +279,7 @@ The current system can:
 - Train and evaluate a LightGBM model.
 - Generate individual loan prediction through FastAPI.
 - Calculate default probability and risk tier.
+- Generate SHAP based explanations for model predictions.
 - Store API scoring results in Oracle.
 - Provide an Oracle analytics view.
 - Display risk analytics through Power BI.

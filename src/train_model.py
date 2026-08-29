@@ -1,10 +1,18 @@
 import pandas as pd
 
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import classification_report
-from sklearn.metrics import accuracy_score
-from sklearn.metrics import confusion_matrix
+from sklearn.linear_model import LogisticRegression
+from lightgbm import LGBMClassifier
+import joblib
+from sklearn.metrics import (
+    accuracy_score,
+    precision_score,
+    recall_score,
+    f1_score,
+    roc_auc_score,
+    confusion_matrix,
+    classification_report
+)
 
 #LOAD
 
@@ -49,11 +57,36 @@ print("Test:", X_test.shape)
 
 #MODEL
 
-model = RandomForestClassifier(
+# BASELINE
+
+baseline = LogisticRegression(
+    max_iter=5000,
+    class_weight="balanced"
+)
+
+baseline.fit(
+    X_train,
+    y_train
+)
+
+baseline_pred = baseline.predict(X_test)
+
+print("\nLogistic Accuracy:")
+
+print(
+    accuracy_score(
+        y_test,
+        baseline_pred
+    )
+)
+
+# FINAL MODEL
+
+model = LGBMClassifier(
     n_estimators=300,
-    max_depth=12,
-    min_samples_split=10,
-    class_weight="balanced", 
+    learning_rate=0.05,
+    max_depth=8,
+    class_weight="balanced",
     random_state=42
 )
 
@@ -62,63 +95,37 @@ model.fit(
     y_train
 )
 
-pred = model.predict(X_test)
+# EVALUATION
 
-prob = model.predict_proba(X_test)
-default_probability = prob[:,1]
+model_pred = model.predict(X_test)
+model_prob = model.predict_proba(X_test)[:, 1]
 
-print("\n Sample Probabilities:")
-print(default_probability[:10])
+print("\nLightGBM Evaluation")
 
-def get_risk_tier(prob):
-    if prob<0.20:
-        return "LOW"
+print("Accuracy:",
+      accuracy_score(y_test, model_pred))
 
-    elif prob<0.50:
-        return "MEDIUM"
-    
-    elif prob<0.80:
-        return "HIGH"
-    
-    else:
-        return "VERY_HIGH"
-    
-risk_tier = [
-    get_risk_tier(p)
-    for p in default_probability
-]
+print("Precision:",
+      precision_score(y_test, model_pred))
 
-print("\nRisk Tier Sample:")
+print("Recall:",
+      recall_score(y_test, model_pred))
 
-for i in range(10):
+print("F1 Score:",
+      f1_score(y_test, model_pred))
 
-    print(
-        round(default_probability[i],3),
-        "->",
-        risk_tier[i]
-    )
-    
-print("\nAccuracy:")
-print(
-    accuracy_score(
-        y_test,
-        pred
-    )
-)
-
-print("\nClassification Report: ")
-print(
-    classification_report(
-        y_test,
-        pred
-    )
-)
+print("ROC-AUC:",
+      roc_auc_score(y_test, model_prob))
 
 print("\nConfusion Matrix:")
+print(confusion_matrix(y_test, model_pred))
 
-print(
-    confusion_matrix(
-        y_test,
-        pred
-    )
+print("\nClassification Report:")
+print(classification_report(y_test, model_pred))
+
+joblib.dump(
+    model,
+    "models/loan_default_model.pkl"
 )
+
+print("\nModel Saved")

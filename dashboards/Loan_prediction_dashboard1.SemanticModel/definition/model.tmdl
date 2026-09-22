@@ -1,0 +1,21 @@
+model Model
+	culture: en-IN
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-IN
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["VW_RISK_ANALYTICS"]
+
+annotation PBI_ProTooling = ["DevMode","MCP-PBIModeling"]
+
+ref table VW_RISK_ANALYTICS
+ref table DateTableTemplate_35683e92-9151-467f-ae60-1761b9ec9e15
+ref table LocalDateTable_44662ee3-f88c-489a-afc1-e915c2cc26bb
+ref table LocalDateTable_e0d479f6-e44e-4246-a9b9-9e8ccb9ab9d0
+
+ref cultureInfo en-IN
+

@@ -1,0 +1,89 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "795da4e553f5c889fcf8",
+  "position": {
+    "x": 335,
+    "y": 245,
+    "z": 6000,
+    "height": 275,
+    "width": 445,
+    "tabOrder": 6000
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "VW_RISK_ANALYTICS"
+                    }
+                  },
+                  "Property": "MODEL_VERSION"
+                }
+              },
+              "queryRef": "VW_RISK_ANALYTICS.MODEL_VERSION",
+              "nativeQueryRef": "MODEL_VERSION",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "VW_RISK_ANALYTICS"
+                    }
+                  },
+                  "Property": "Average Default Probability"
+                }
+              },
+              "queryRef": "VW_RISK_ANALYTICS.Average Default Probability",
+              "nativeQueryRef": "Average Default Probability"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Avg Default Probability by Model Version'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

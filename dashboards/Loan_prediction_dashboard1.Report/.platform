@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Loan_prediction_dashboard1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "eb16da39-9c1c-4ac8-b2d7-5d1be116f840"
+  }
+}

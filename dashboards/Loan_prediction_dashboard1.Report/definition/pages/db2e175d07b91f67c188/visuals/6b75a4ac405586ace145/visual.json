@@ -1,0 +1,89 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "6b75a4ac405586ace145",
+  "position": {
+    "x": 20,
+    "y": 245,
+    "z": 5000,
+    "height": 275,
+    "width": 300,
+    "tabOrder": 5000
+  },
+  "visual": {
+    "visualType": "donutChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "VW_RISK_ANALYTICS"
+                    }
+                  },
+                  "Property": "RISK_TIER"
+                }
+              },
+              "queryRef": "VW_RISK_ANALYTICS.RISK_TIER",
+              "nativeQueryRef": "RISK_TIER",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "VW_RISK_ANALYTICS"
+                    }
+                  },
+                  "Property": "Total Loans"
+                }
+              },
+              "queryRef": "VW_RISK_ANALYTICS.Total Loans",
+              "nativeQueryRef": "Total Loans"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Loan Count by Risk Tier'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#FFFFFF'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Loan_prediction_dashboard1"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "987beb4f-c900-4577-a7ce-431bf21bbc2c"
+  }
+}

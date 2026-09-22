@@ -1,0 +1,10 @@
+relationship 36c398c5-ad91-47f7-afbb-7a51c11fa3a0
+	joinOnDateBehavior: datePartOnly
+	fromColumn: VW_RISK_ANALYTICS.SCORED_AT
+	toColumn: LocalDateTable_44662ee3-f88c-489a-afc1-e915c2cc26bb.Date
+
+relationship c8b1afc0-8e62-478d-a8b6-3090007418f3
+	joinOnDateBehavior: datePartOnly
+	fromColumn: VW_RISK_ANALYTICS.ISSUE_DATE
+	toColumn: LocalDateTable_e0d479f6-e44e-4246-a9b9-9e8ccb9ab9d0.Date
+

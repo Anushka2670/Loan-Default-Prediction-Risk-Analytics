@@ -1,0 +1,342 @@
+table VW_RISK_ANALYTICS
+	lineageTag: e5b130f4-bd5e-4687-8eeb-2f9b72f4bf33
+
+	measure 'Total Loans' = DISTINCTCOUNT(VW_RISK_ANALYTICS[LOAN_ID])
+		formatString: 0
+		lineageTag: 7495bbaa-aec7-4369-a202-a9fabb691440
+
+	measure 'Default Rate' =
+			
+			DIVIDE(
+			    CALCULATE(
+			        DISTINCTCOUNT(VW_RISK_ANALYTICS[LOAN_ID]),
+			        VW_RISK_ANALYTICS[LOAN_STATUS] = 1
+			    ),
+			    [Total Loans]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: a0a7ac9d-fff2-4426-9202-253f86be18a7
+
+	measure 'Average Default Probability' = AVERAGE(VW_RISK_ANALYTICS[DEFAULT_PROB])
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 4df14323-58c4-4d77-8149-2061f78216d8
+
+	measure 'High Risk Loans' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(VW_RISK_ANALYTICS[LOAN_ID]),
+			    VW_RISK_ANALYTICS[RISK_TIER] = "HIGH"
+			)
+		formatString: 0
+		lineageTag: 8c33b304-182e-4107-851b-9bd8eec40476
+
+	measure 'Very High Risk Loans' =
+			
+			CALCULATE(
+			    DISTINCTCOUNT(VW_RISK_ANALYTICS[LOAN_ID]),
+			    VW_RISK_ANALYTICS[RISK_TIER] = "VERY_HIGH"
+			)
+		formatString: 0
+		lineageTag: 744277c5-8200-4182-9819-9940cf2c2d82
+
+	measure 'Total Loan Amount' = SUM(VW_RISK_ANALYTICS[LOAN_AMNT])
+		formatString: #,0
+		lineageTag: 9d7c2e2b-2c7a-4a5e-8e2b-0b8b7e3f0001
+
+	measure 'Average Loan Amount' = AVERAGE(VW_RISK_ANALYTICS[LOAN_AMNT])
+		formatString: #,0
+		lineageTag: 9d7c2e2b-2c7a-4a5e-8e2b-0b8b7e3f0002
+
+	measure 'Average Interest Rate' = AVERAGE(VW_RISK_ANALYTICS[LOAN_INT_RATE])
+		formatString: 0.0%
+		lineageTag: 9d7c2e2b-2c7a-4a5e-8e2b-0b8b7e3f0003
+
+	measure 'Defaulted Loans' = CALCULATE(DISTINCTCOUNT(VW_RISK_ANALYTICS[LOAN_ID]), VW_RISK_ANALYTICS[LOAN_STATUS] = 1)
+		formatString: 0
+		lineageTag: 9d7c2e2b-2c7a-4a5e-8e2b-0b8b7e3f0004
+
+	measure 'Low Medium Risk Loans' = CALCULATE(DISTINCTCOUNT(VW_RISK_ANALYTICS[LOAN_ID]), VW_RISK_ANALYTICS[RISK_TIER] IN {"LOW", "MEDIUM"})
+		formatString: 0
+		lineageTag: 9d7c2e2b-2c7a-4a5e-8e2b-0b8b7e3f0005
+
+	measure 'Non-Defaulted Loans' =
+			CALCULATE(
+			    [Total Loans],
+			    VW_RISK_ANALYTICS[LOAN_STATUS] = 0
+			)
+		formatString: 0
+		lineageTag: 44a18e09-71b0-427d-a5ce-ed9dd9e91797
+
+	measure 'High Plus Very High Risk' = [High Risk Loans] + [Very High Risk Loans]
+		formatString: 0
+		lineageTag: 6c36e0e9-4941-4ae2-b83c-5c78ebfe42a2
+
+	measure 'Default Exposure' =
+			CALCULATE(
+			    [Total Loan Amount],
+			    VW_RISK_ANALYTICS[LOAN_STATUS] = 1
+			)
+		formatString: #,0
+		lineageTag: 97dd446b-f20c-4348-9b92-9f9fe70105ab
+
+	measure 'Average Loan Income Ratio' = AVERAGE(VW_RISK_ANALYTICS[LOAN_PERCENT_INCOME])
+		formatString: 0.00%
+		lineageTag: a27b2dfa-6679-494b-acdd-2f51f7031585
+
+	measure 'Observed Default Rate' =
+			DIVIDE(
+			    [Defaulted Loans],
+			    [Total Loans],
+			    0
+			)
+		formatString: 0.00%
+		lineageTag: 58b98910-e443-4b24-86f0-bbfc5f5647cb
+
+	measure 'Average Age' = AVERAGE(VW_RISK_ANALYTICS[PERSON_AGE])
+		formatString: 0.0
+		lineageTag: 04fbf4a3-7ee2-403c-ab05-b163b255184c
+
+	measure 'Average Income' = AVERAGE(VW_RISK_ANALYTICS[PERSON_INCOME])
+		formatString: #,0
+		lineageTag: bc68de34-482d-457e-8b7e-8717cf886da9
+
+	measure 'Average Employment Length' = AVERAGE(VW_RISK_ANALYTICS[PERSON_EMP_LENGTH])
+		formatString: 0.0
+		lineageTag: 968d1e03-ea93-4e7f-8ff8-f3ac552ffd34
+
+	measure 'Average Credit History Length' = AVERAGE(VW_RISK_ANALYTICS[CB_PERSON_CRED_HIST_LENGTH])
+		formatString: 0.0
+		lineageTag: 2bd60b78-2120-4a5e-b991-09ac9539401a
+
+	measure 'Total Borrowers' = DISTINCTCOUNT(VW_RISK_ANALYTICS[BORROWER_ID])
+		formatString: 0
+		lineageTag: c1a2e3f4-1a2b-4c3d-9e8f-1a2b3c4d5e01
+
+	measure 'Loans per Borrower' = DIVIDE([Total Loans], [Total Borrowers], 0)
+		formatString: 0.00
+		lineageTag: c1a2e3f4-1a2b-4c3d-9e8f-1a2b3c4d5e02
+
+	measure 'High Risk Share' = DIVIDE([High Plus Very High Risk], [Total Loans], 0)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c1a2e3f4-1a2b-4c3d-9e8f-1a2b3c4d5e03
+
+	measure 'Prior Default Rate' =
+			DIVIDE(
+			    CALCULATE([Total Loans], VW_RISK_ANALYTICS[CB_PERSON_DEFAULT_ON_FILE] = "Y"),
+			    [Total Loans],
+			    0
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: c1a2e3f4-1a2b-4c3d-9e8f-1a2b3c4d5e04
+
+	measure 'Model Calibration Gap' = [Average Default Probability] - [Observed Default Rate]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: c1a2e3f4-1a2b-4c3d-9e8f-1a2b3c4d5e05
+
+	measure 'Total Interest Exposure' = SUMX(VW_RISK_ANALYTICS, VW_RISK_ANALYTICS[LOAN_AMNT] * VW_RISK_ANALYTICS[LOAN_INT_RATE])
+		formatString: #,0
+		lineageTag: c1a2e3f4-1a2b-4c3d-9e8f-1a2b3c4d5e06
+
+	measure 'Latest Model Version' = CALCULATE(MAX(VW_RISK_ANALYTICS[MODEL_VERSION]))
+		lineageTag: c1a2e3f4-1a2b-4c3d-9e8f-1a2b3c4d5e07
+
+	column LOAN_ID
+		dataType: double
+		lineageTag: 14dca8b0-15d2-4f89-aa3b-a8795d1c5d50
+		summarizeBy: none
+		sourceColumn: LOAN_ID
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LOAN_AMNT
+		dataType: double
+		lineageTag: a723a0a6-0f1c-49ce-bca7-3bc01805ec52
+		summarizeBy: none
+		sourceColumn: LOAN_AMNT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LOAN_GRADE
+		dataType: string
+		lineageTag: eaba3f58-3f11-4bb2-a8d2-58f731b06728
+		summarizeBy: none
+		sourceColumn: LOAN_GRADE
+
+		annotation SummarizationSetBy = Automatic
+
+	column LOAN_INT_RATE
+		dataType: double
+		lineageTag: 1ce93ac9-0faf-46c7-aa64-e5c2ccb084a4
+		summarizeBy: none
+		sourceColumn: LOAN_INT_RATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LOAN_STATUS
+		dataType: double
+		lineageTag: ec430e0e-b93c-40e4-a636-070d83a9decf
+		summarizeBy: none
+		sourceColumn: LOAN_STATUS
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DEFAULT_PROB
+		dataType: double
+		lineageTag: a1e9cd9c-a4cc-4750-9af3-923831caf4ae
+		summarizeBy: none
+		sourceColumn: DEFAULT_PROB
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RISK_TIER
+		dataType: string
+		lineageTag: 08946f34-e449-4f86-9994-66452e4982c0
+		summarizeBy: none
+		sourceColumn: RISK_TIER
+
+		annotation SummarizationSetBy = Automatic
+
+	column MODEL_VERSION
+		dataType: string
+		lineageTag: 6772bcae-5a00-4e31-bb77-16c99de11add
+		summarizeBy: none
+		sourceColumn: MODEL_VERSION
+
+		annotation SummarizationSetBy = Automatic
+
+	column SCORED_AT
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 7eadc848-c2da-44c2-9669-f236fe82db81
+		summarizeBy: none
+		sourceColumn: SCORED_AT
+
+		variation Variation
+			isDefault
+			relationship: 36c398c5-ad91-47f7-afbb-7a51c11fa3a0
+			defaultHierarchy: LocalDateTable_44662ee3-f88c-489a-afc1-e915c2cc26bb.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column BORROWER_ID
+		dataType: double
+		lineageTag: 2276702c-496c-4653-a14c-c8678060d58a
+		summarizeBy: none
+		sourceColumn: BORROWER_ID
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LOAN_INTENT
+		dataType: string
+		lineageTag: b84d5649-4470-4cc1-8b21-b81c4c70986e
+		summarizeBy: none
+		sourceColumn: LOAN_INTENT
+
+		annotation SummarizationSetBy = Automatic
+
+	column ISSUE_DATE
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 574a73ad-9bb3-4a51-94df-53fea8f01972
+		summarizeBy: none
+		sourceColumn: ISSUE_DATE
+
+		variation Variation
+			isDefault
+			relationship: c8b1afc0-8e62-478d-a8b6-3090007418f3
+			defaultHierarchy: LocalDateTable_e0d479f6-e44e-4246-a9b9-9e8ccb9ab9d0.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column LOAN_PERCENT_INCOME
+		dataType: double
+		lineageTag: db2d1569-018b-4bfb-86e3-28a8a71f915e
+		summarizeBy: none
+		sourceColumn: LOAN_PERCENT_INCOME
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PERSON_INCOME
+		dataType: double
+		lineageTag: 8677bc9a-c2ef-40c9-8aac-748a6629a84b
+		summarizeBy: none
+		sourceColumn: PERSON_INCOME
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PERSON_EMP_LENGTH
+		dataType: double
+		lineageTag: 430e44d3-7c2d-4273-a031-6ce1fc00c4d8
+		summarizeBy: none
+		sourceColumn: PERSON_EMP_LENGTH
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PERSON_HOME_OWNERSHIP
+		dataType: string
+		lineageTag: 883ff0c6-9e44-4beb-b278-3676a09941a2
+		summarizeBy: none
+		sourceColumn: PERSON_HOME_OWNERSHIP
+
+		annotation SummarizationSetBy = Automatic
+
+	column CB_PERSON_DEFAULT_ON_FILE
+		dataType: string
+		lineageTag: 16c09a13-1d70-48cf-ab00-f1397ff96e99
+		summarizeBy: none
+		sourceColumn: CB_PERSON_DEFAULT_ON_FILE
+
+		annotation SummarizationSetBy = Automatic
+
+	column CB_PERSON_CRED_HIST_LENGTH
+		dataType: double
+		lineageTag: 6f9bde94-b0b8-4bcc-8821-ed5a76946536
+		summarizeBy: none
+		sourceColumn: CB_PERSON_CRED_HIST_LENGTH
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column PERSON_AGE
+		dataType: double
+		lineageTag: 1361e123-55ca-40a9-b5cf-a0a8e72a89da
+		summarizeBy: none
+		sourceColumn: PERSON_AGE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition VW_RISK_ANALYTICS = m
+		mode: import
+		source =
+				let
+				    Source = Oracle.Database("localhost/XEPDB1", [HierarchicalNavigation=true]),
+				    RISK_USER = Source{[Schema="RISK_USER"]}[Data],
+				    VW_RISK_ANALYTICS1 = RISK_USER{[Name="VW_RISK_ANALYTICS"]}[Data]
+				in
+				    VW_RISK_ANALYTICS1
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+
